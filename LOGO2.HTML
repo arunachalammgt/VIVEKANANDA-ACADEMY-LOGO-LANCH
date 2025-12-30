@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVEKANANDA ACADEMY</title>
+<link rel="icon" href="vivek.png">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle, #0f2027, #000);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+h1 {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(18px, 4.5vw, 34px);
+}
+
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 260px;
+    max-width: 70vw;
+}
+
+/* CLICK ANYWHERE */
+#clickHint {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.65);
+    font-size: 18px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+/* FLOWERS */
+.petal {
+    position: fixed;
+    top: -40px;
+    font-size: 22px;
+    animation: fall linear infinite;
+    pointer-events: none;
+}
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+   <h1>VIVEKANANDA ACADEMY LOGO LAUNCH</h1>
+
+<div id="clickHint">Click anywhere to hear the music</div>
+
+<div class="main">
+    <img src="logo.jpeg" class="logo">
+</div>
+
+<audio id="releaseAudio" src="after.webm" loop></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+const audio = document.getElementById("releaseAudio");
+const hint = document.getElementById("clickHint");
+
+/* CLICK ANYWHERE TO START MUSIC */
+function startMusic() {
+    audio.volume = 0.8;
+    audio.play().catch(()=>{});
+    hint.style.display = "none";
+    document.removeEventListener("click", startMusic);
+}
+document.addEventListener("click", startMusic);
+
+/* FLOWERS */
+function flowers() {
+    const symbols = ["🌸","🌺"];
+    setInterval(() => {
+        const f = document.createElement("div");
+        f.className = "petal";
+        f.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        f.style.left = Math.random() * 100 + "vw";
+        f.style.animationDuration = (3 + Math.random() * 4) + "s";
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 7000);
+    }, 400);
+}
+flowers();
+
+/* CONFETTI */
+(function confettiBlast() {
+    const end = Date.now() + 4000;
+    (function frame() {
+        confetti({ particleCount: 4, spread: 70, startVelocity: 45 });
+        if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+})();
+</script>
+
+</body>
+</html>

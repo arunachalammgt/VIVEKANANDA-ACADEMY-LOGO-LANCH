@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVEKANANDA ACADEMY</title>
+<link rel="icon" href="vivek.png">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle, #0f2027, #000);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+h1 {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(18px, 4.5vw, 34px);
+}
+
+.main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.countdown {
+    font-size: clamp(24px, 5vw, 42px);
+}
+
+/* CLICK ANYWHERE */
+#clickHint {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.65);
+    font-size: 18px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+/* ADMIN */
+.admin-btn {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    font-size: 12px;
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.admin-panel {
+    position: fixed;
+    bottom: 50px;
+    right: 12px;
+    background: #111;
+    padding: 14px;
+    width: 220px;
+    border: 1px solid #fff;
+    display: none;
+}
+.admin-panel input,
+.admin-panel button {
+    width: 100%;
+    margin-top: 6px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>VIVEKANANDA ACADEMY LOGO LAUNCH</h1>
+
+<div id="clickHint">Click anywhere to hear the music</div>
+
+<div class="main">
+    <div id="countdown" class="countdown"></div>
+</div>
+
+<div class="admin-btn" onclick="toggleAdmin()">Admin</div>
+
+<div class="admin-panel" id="adminPanel">
+    <input type="password" id="pass" placeholder="Password">
+    <button onclick="release()">Release</button>
+</div>
+
+<audio id="countdownAudio" src="before.mp4" loop></audio>
+
+<script>
+const ADMIN_PASS = "rewil@2025";
+const RELEASE_TIME = new Date("Dec 31, 2025 23:59:59").getTime();
+
+const cd = document.getElementById("countdown");
+const audio = document.getElementById("countdownAudio");
+const hint = document.getElementById("clickHint");
+const adminPanel = document.getElementById("adminPanel");
+const pass = document.getElementById("pass");
+
+/* CLICK ANYWHERE TO START MUSIC */
+function startMusic() {
+    audio.volume = 0.6;
+    audio.play().catch(()=>{});
+    hint.style.display = "none";
+    document.removeEventListener("click", startMusic);
+}
+document.addEventListener("click", startMusic);
+
+/* COUNTDOWN */
+setInterval(() => {
+    const diff = RELEASE_TIME - Date.now();
+    if (diff <= 0) {
+        cd.textContent = "RELEASE TIME";
+        return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor(diff / 3600000) % 24;
+    const m = Math.floor(diff / 60000) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+    cd.textContent = `${d}d ${h}h ${m}m ${s}s`;
+}, 1000);
+
+/* ADMIN */
+function toggleAdmin() {
+    adminPanel.style.display =
+        adminPanel.style.display === "block" ? "none" : "block";
+}
+
+function release() {
+    if (pass.value !== ADMIN_PASS) {
+        alert("Wrong password");
+        return;
+    }
+    alert("Release confirmed. Switch to AFTER RELEASE file manually.");
+}
+</script>
+
+</body>
+</html>
