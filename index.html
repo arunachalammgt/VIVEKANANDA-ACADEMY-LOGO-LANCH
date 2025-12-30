@@ -51,32 +51,6 @@ h1 {
     z-index: 999;
     cursor: pointer;
 }
-
-/* ADMIN */
-.admin-btn {
-    position: fixed;
-    bottom: 12px;
-    right: 12px;
-    font-size: 12px;
-    opacity: 0.6;
-    cursor: pointer;
-}
-
-.admin-panel {
-    position: fixed;
-    bottom: 50px;
-    right: 12px;
-    background: #111;
-    padding: 14px;
-    width: 220px;
-    border: 1px solid #fff;
-    display: none;
-}
-.admin-panel input,
-.admin-panel button {
-    width: 100%;
-    margin-top: 6px;
-}
 </style>
 </head>
 
@@ -131,21 +105,8 @@ setInterval(() => {
     const s = Math.floor(diff / 1000) % 60;
     cd.textContent = `${d}d ${h}h ${m}m ${s}s`;
 }, 1000);
-
-/* ADMIN */
-function toggleAdmin() {
-    adminPanel.style.display =
-        adminPanel.style.display === "block" ? "none" : "block";
-}
-
-function release() {
-    if (pass.value !== ADMIN_PASS) {
-        alert("Wrong password");
-        return;
-    }
-    alert("Release confirmed. Switch to AFTER RELEASE file manually.");
-}
 </script>
 
 </body>
 </html>
+
