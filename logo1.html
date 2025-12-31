@@ -6,12 +6,6 @@
 <title>VIVEKANANDA ACADEMY</title>
 <link rel="icon" href="vivek.png">
 
-<!-- Vercel Web Analytics -->
-<script>
-  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
-
 <style>
 * { box-sizing: border-box; }
 
@@ -23,6 +17,7 @@ body {
     color: #fff;
     overflow: hidden;
 }
+
 h1 {
     position: fixed;
     top: 80px;
@@ -32,7 +27,8 @@ h1 {
     text-align: center;
     font-size: clamp(18px, 4.5vw, 34px);
 }
-  h2 {
+
+h2 {
     position: fixed;
     bottom: 80px;
     left: 50%;
@@ -41,7 +37,16 @@ h1 {
     text-align: center;
     font-size: clamp(18px, 4.5vw, 34px);
 }
+#pongal{
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(18px, 4.5vw, 34px);
 
+}
 .main {
     min-height: 100vh;
     display: flex;
@@ -75,6 +80,7 @@ h1 {
     animation: fall linear infinite;
     pointer-events: none;
 }
+
 @keyframes fall {
     to {
         transform: translateY(110vh) rotate(360deg);
@@ -85,35 +91,46 @@ h1 {
 </head>
 
 <body>
-   <h1>VIVEKANANDA ACADEMY LOGO LAUNCH</h1>
-  <h2>இனிய புத்தாண்டு நல்வாழ்த்துகள்</h2>
 
-<div id="clickHint">Click anywhere to hear the music🎧🎼🔥</div>
+<h1>VIVEKANANDA ACADEMY LOGO LAUNCH</h1>
+<h2>இனிய புத்தாண்டு நல்வாழ்த்துகள்</h2>
+<h2 id="pongal">இனிய பொங்கல் நல்வாழ்த்துகள்</h2>
+
+<div id="clickHint">Click anywhere to hear the music 🎧</div>
 
 <div class="main">
-    <img src="logo.jpeg" class="logo">
+    <img src="logo.jpeg" class="logo" alt="Logo">
 </div>
 
-<audio id="releaseAudio" src="after.webm" loop></audio>
+<!-- AUDIO -->
+<audio id="annaVoice" src="anna voice.mp4"></audio>
+<audio id="afterMusic" src="after.webm" loop></audio>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <script>
-const audio = document.getElementById("releaseAudio");
+const annaVoice = document.getElementById("annaVoice");
+const afterMusic = document.getElementById("afterMusic");
 const hint = document.getElementById("clickHint");
 
-/* CLICK ANYWHERE TO START MUSIC */
-function startMusic() {
-    audio.volume = 0.8;
-    audio.play().catch(()=>{});
+/* CLICK TO START AUDIO */
+function startAudio() {
+
+    // Background music (LOW, LOOP)
+    afterMusic.volume = 0.3;
+    afterMusic.play().catch(() => {});
+
+    // Anna voice (LOUD, ONCE)
+    annaVoice.volume = 1.0;
+    annaVoice.play().catch(() => {});
+
     hint.style.display = "none";
-    document.removeEventListener("click", startMusic);
+    document.removeEventListener("click", startAudio);
 }
-document.addEventListener("click", startMusic);
 
 /* FLOWERS */
 function flowers() {
-    const symbols = ["🌸","🌺"];
+    const symbols = ["🌸", "🌺"];
     setInterval(() => {
         const f = document.createElement("div");
         f.className = "petal";
@@ -122,18 +139,24 @@ function flowers() {
         f.style.animationDuration = (3 + Math.random() * 4) + "s";
         document.body.appendChild(f);
         setTimeout(() => f.remove(), 7000);
-    }, 400);
+    }, 500);
 }
-flowers();
 
 /* CONFETTI */
-(function confettiBlast() {
+function confettiBlast() {
     const end = Date.now() + 4000;
     (function frame() {
         confetti({ particleCount: 4, spread: 70, startVelocity: 45 });
         if (Date.now() < end) requestAnimationFrame(frame);
     })();
-})();
+}
+
+document.addEventListener("click", () => {
+    startAudio();
+    flowers();
+    confettiBlast();
+}, { once: true });
+
 </script>
 
 </body>
