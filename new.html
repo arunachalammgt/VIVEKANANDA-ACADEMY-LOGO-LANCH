@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVEKANANDA ACADEMY</title>
+<link rel="icon" href="vivek.png">
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f4c75, #1b262c);
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+    text-align: center;
+}
+
+h1 {
+    position: fixed;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    font-size: clamp(18px, 4.5vw, 34px);
+    z-index: 10;
+}
+
+.main {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* RELEASE BUTTON */
+#releaseBtn {
+    padding: 14px 36px;
+    font-size: clamp(16px, 4vw, 20px);
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 40px;
+    color: #fff;
+    background: linear-gradient(135deg, #ff512f, #dd2476);
+    animation: pulse 2.5s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,80,80,0.6); }
+    70% { box-shadow: 0 0 0 22px rgba(255,80,80,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,80,80,0); }
+}
+
+/* COUNTDOWN */
+#countdown {
+    display: none;
+    font-size: clamp(80px, 22vw, 160px);
+    font-weight: bold;
+}
+
+.moveFade {
+    animation: moveFade 3s linear forwards;
+}
+
+@keyframes moveFade {
+    from { transform: translateX(-200px); opacity: 1; }
+    to   { transform: translateX(200px); opacity: 0; }
+}
+
+/* SCANNING TEXT */
+#scanText {
+    display: none;
+    position: relative;
+    font-size: clamp(26px, 6vw, 46px);
+    font-weight: bold;
+    margin-top: 30px;
+    color: #bbb;
+    overflow: hidden;
+}
+
+#scanText::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: -35%;
+    width: 100%;
+    height: 35%;
+    background: linear-gradient(to bottom, transparent, #4dd0e1, transparent);
+    animation: scan 3s ease-in-out forwards;
+}
+
+@keyframes scan {
+    from { top: -35%; }
+    to   { top: 100%; }
+}
+
+/* LOGO */
+.logo {
+    display: none;
+    width: min(280px, 70vw);
+    animation: reveal 1.8s ease forwards;
+}
+
+@keyframes reveal {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* FLOWERS */
+.petal {
+    position: fixed;
+    top: -40px;
+    font-size: 24px;
+    animation: fall linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<h1>VIVEKANANDA ACADEMY LOGO LAUNCH</h1>
+
+<div class="main">
+
+    <button id="releaseBtn">Release</button>
+
+    <div id="countdown">10</div>
+
+    <div id="scanText">VIVEKANANDA ACADEMY</div>
+
+    <img src="logo.jpeg" id="logo" class="logo">
+
+</div>
+
+<!-- COUNTDOWN MUSIC (CONTINUOUS) -->
+<audio id="countMusic" src="coundown.mp4" loop></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+const releaseBtn = document.getElementById("releaseBtn");
+const countdown = document.getElementById("countdown");
+const scanText = document.getElementById("scanText");
+const logo = document.getElementById("logo");
+const countMusic = document.getElementById("countMusic");
+
+/* FLOWERS */
+function flowers() {
+    const symbols = ["🌸", "🌺"];
+    setInterval(() => {
+        const f = document.createElement("div");
+        f.className = "petal";
+        f.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        f.style.left = Math.random() * 100 + "vw";
+        f.style.animationDuration = (4 + Math.random() * 4) + "s";
+        document.body.appendChild(f);
+        setTimeout(() => f.remove(), 9000);
+    }, 400);
+}
+
+/* STRONG POPPERS */
+function poppers() {
+    const end = Date.now() + 6000;
+    (function frame() {
+        confetti({ particleCount: 10, angle: 60, spread: 100, startVelocity: 65, origin: { x: 0 } });
+        confetti({ particleCount: 10, angle: 120, spread: 100, startVelocity: 65, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+}
+
+/* RELEASE → COUNTDOWN → AUTO LOGO RELEASE */
+releaseBtn.onclick = () => {
+    releaseBtn.style.display = "none";
+    countdown.style.display = "block";
+
+    countMusic.volume = 0.6;
+    countMusic.play().catch(()=>{});
+
+    let n = 10;
+    countdown.textContent = n;
+
+    const timer = setInterval(() => {
+        countdown.classList.remove("moveFade");
+        void countdown.offsetWidth;
+        countdown.classList.add("moveFade");
+
+        n--;
+        countdown.textContent = n;
+
+        if (n === 0) {
+            clearInterval(timer);
+            countdown.style.display = "none";
+
+            /* SCANNING 3 TIMES */
+            scanText.style.display = "block";
+            let scans = 0;
+
+            const scanLoop = setInterval(() => {
+                scanText.style.display = "none";
+                void scanText.offsetWidth;
+                scanText.style.display = "block";
+
+                scans++;
+                if (scans === 3) {
+                    clearInterval(scanLoop);
+                    setTimeout(() => {
+                        scanText.style.display = "none";
+                        logo.style.display = "block";
+                        flowers();
+                        poppers();
+                    }, 3000);
+                }
+            }, 2800);
+        }
+    }, 2000);
+};
+</script>
+
+</body>
+</html>
